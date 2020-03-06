@@ -7,7 +7,6 @@ using System.Data.SQLite;
 using Newtonsoft.Json;
 using System.Data;
 using System.Data.SqlClient;
-using System.Data.SQLite.Linq;
 
 namespace SQliteHelper
 {
@@ -18,24 +17,25 @@ namespace SQliteHelper
             string path = @"d:\123.db";
             CreateSQliteTable(path);
             ReaderGivenSQliteTable(path, "t1");
-            //Console.WriteLine();
-            //Console.WriteLine();
-            //   ReaderAllSQliteTable(path);          
-          
+            //   ReaderAllSQliteTable(path);         
+
             SQLiteConnection scn = new SQLiteConnection("data source=" + path);
             for (int i = 0; i < 1; i++)
             {
-                SQliteData sdata = new SQliteData("34", i, "78",DateTime.Now.Millisecond.ToString());
-            //    InsertData(sdata, scn);
+                SQliteData sdata = new SQliteData("34", i, "78", DateTime.Now.Millisecond.ToString());
+                //    InsertData(sdata, scn);
                 SelectData(sdata, scn);
             }
-           
-
             Console.WriteLine("结束");
             Console.Read();
 
         }
 
+        /// <summary>
+        /// 插入数 据
+        /// </summary>
+        /// <param name="sdata"></param>
+        /// <param name="scn"></param>
         private static void InsertData(SQliteData sdata, SQLiteConnection scn)
         {
             if (scn.State != ConnectionState.Open)
@@ -43,12 +43,16 @@ namespace SQliteHelper
                 scn.Open();
                 SQLiteCommand cmd = scn.CreateCommand();
                 cmd.Connection = scn;
-                 cmd.CommandText = string.Format("insert into t1 values({0},{1},{2},{3})", sdata.Id, sdata.Indata, sdata.Strdata, sdata.Iamgeinfo);
+                cmd.CommandText = string.Format("insert into t1 values({0},{1},{2},{3})", sdata.Id, sdata.Indata, sdata.Strdata, sdata.Iamgeinfo);
                 cmd.ExecuteNonQuery();
                 scn.Close();
             }
         }
-
+        /// <summary>
+        /// 查找数据
+        /// </summary>
+        /// <param name="sdata"></param>
+        /// <param name="scn"></param>
         private static void SelectData(SQliteData sdata, SQLiteConnection scn)
         {
             if (scn.State != ConnectionState.Open)
@@ -56,11 +60,11 @@ namespace SQliteHelper
                 scn.Open();
                 SQLiteCommand cmd = scn.CreateCommand();
                 cmd.Connection = scn;
-                cmd.CommandText= "select* from t1 where imageinfo=770";
+                cmd.CommandText = "select* from t1 where imageinfo=770";
                 SQLiteDataReader sr = cmd.ExecuteReader();
                 while (sr.Read())
                 {
-                    Console.WriteLine( "Indata:"+sr.GetValue(1));
+                    Console.WriteLine("Indata:" + sr.GetValue(1));
                 }
                 sr.Close();
                 cmd.ExecuteNonQuery();
@@ -167,8 +171,8 @@ namespace SQliteHelper
         public int Indata { get => indata; set => indata = value; }
         public string Strdata { get => strdata; set => strdata = value; }
         public string Iamgeinfo { get => iamgeinfo; set => iamgeinfo = value; }
-      public   SQliteData() { }
-        public SQliteData(string str1,int int1,string str3,string str4)
+        public SQliteData() { }
+        public SQliteData(string str1, int int1, string str3, string str4)
         {
             this.id = str1;
             this.indata = int1;
